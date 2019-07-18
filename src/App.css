@@ -1,0 +1,4 @@
+.filters, .flight-headings, .flight-card{
+  display: flex;
+  justify-content: space-evenly;
+}
