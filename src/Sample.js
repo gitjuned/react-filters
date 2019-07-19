@@ -200,7 +200,7 @@ class Sample extends Component {
 
     time: "",
 
-    range: 5000
+    range: 0
   };
 
   handleTimeChange = e => {
@@ -223,7 +223,7 @@ class Sample extends Component {
         range
       },
       () => {
-        console.log(this.state.range);
+        console.log("Range Value: ", this.state.range);
       }
     );
   };
@@ -276,16 +276,33 @@ class Sample extends Component {
       }
     } // ELSE ENDS
 
+    console.log("filtered elements before time", filteredElements);
     // if (this.state.time !== "") {
     filteredElements = filteredElements.filter(function(flight) {
       return flight.duration >= time;
     });
+    // }
 
-    filteredElements = filteredElements.filter(function(flight) {
-      return flight.price <= range;
-    });
+    console.log("filtered elements before range", filteredElements);
 
-    console.log("non zero block, after filtered elements", filteredElements);
+    if (name === undefined && time.length === 0) {
+      console.log("direct range");
+      console.log("filtered elem before spread", filteredElements);
+      console.log("flights data", this.state.flights);
+      filteredElements = [...this.state.flights];
+      console.log("filtered elem after spread", filteredElements);
+    }
+
+    if (range > 0) {
+      filteredElements = filteredElements.filter(function(flight) {
+        return flight.price <= range;
+      });
+    }
+
+    console.log(
+      "non zero block, after filtered elements after range",
+      filteredElements
+    );
     // }
     console.log("range ", this.state.range);
 
@@ -340,9 +357,9 @@ class Sample extends Component {
             <p>Max Price Limit: {this.state.range}</p>
 
             <Slider
-              min={5000}
-              max={30000}
-              step={5000}
+              min={0}
+              max={35000}
+              // step={5000}
               value={this.state.range}
               onChange={this.onSliderChange}
               // onChange={this.handleChange}
