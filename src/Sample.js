@@ -1,5 +1,11 @@
 import React, { Component } from "react";
 import "./App.css";
+// import Tooltip from "rc-tooltip";
+// import Slider from "rc-slider";
+
+import Slider, { createSliderWithTooltip } from "rc-slider";
+import "rc-slider/assets/index.css";
+import "rc-tooltip/assets/bootstrap.css";
 
 class Sample extends Component {
   state = {
@@ -192,92 +198,9 @@ class Sample extends Component {
 
     checkedAirLines: [],
 
-    time: ""
-  };
+    time: "",
 
-  handleChange = (event, name) => {
-    let filteredElements = []; //filtered array
-    let filteredElements2 = []; //filtered array for looping
-    let filteredData = [this.state.flights]; //local state
-    let time = 0;
-    let checkedAirline = [];
-    let checkedFlights = [...this.state.checkedAirLines];
-    time = this.state.time;
-    if (checkedFlights.includes(name)) {
-      console.log("UNCHECKED, if block");
-
-      // FILTERING CHECKED AIRLINE FLIGHTS
-      checkedAirline = checkedFlights.filter(function(airline) {
-        return airline !== name;
-      });
-
-      // FILTERING FLIGHTS
-      filteredElements = this.state.filteredData.filter(function(flight) {
-        return flight.name !== name;
-      });
-
-      this.setState({
-        checkedAirLines: [...checkedAirline]
-        // filteredData: [...filteredElements]
-      });
-      //   console.log("filtered element local array", filteredElements);
-
-      if (this.state.checkedAirLines.length === 1) {
-        console.log("length 1 check");
-        filteredElements = [...this.state.flights];
-      }
-    } else {
-      console.log("CHECKED, else block ");
-      //   console.log("name", name);
-      if (name !== undefined || checkedFlights.length > 0) {
-        // console.log("name", name);
-        checkedFlights.push(name);
-
-        for (let i = 0; i < checkedFlights.length; i++) {
-          filteredElements2 = this.state.flights.filter(function(flight) {
-            return flight.name === checkedFlights[i];
-          });
-          filteredElements = [...filteredElements, ...filteredElements2];
-        }
-        this.setState({
-          checkedAirLines: [...checkedFlights]
-          // filteredData: [...filteredData],
-        });
-        // console.log("filtered elem else in else", filteredElements);
-      } else {
-        console.log("direct", [...this.state.filteredData]);
-        console.log("direct", [...filteredElements], "filter ele");
-        // console.log("name", name);
-        // console.log("filtered data", this.state.filteredData);
-        // console.log("filtered elements", filteredElements);
-        // console.log("checked airlines", this.state.checkedAirLines);
-        filteredElements = [...this.state.filteredData];
-      }
-      //   console.log("filtered element local array", filteredElements);
-    } // ELSE ENDS
-
-    // if (this.state.time !== "") {
-
-    console.log(
-      "non zero block, before filtered elements",
-      filteredElements,
-      ",",
-      time
-    );
-    filteredElements = filteredElements.filter(function(flight) {
-      return flight.duration >= time;
-    });
-    console.log("non zero block, after filtered elements", filteredElements);
-    // }
-
-    // console.log("BEFORE StATE filtered data state", this.state.filteredData);
-    // console.log(
-    //   "BEFORE StATE non zero block, filtered elements",
-    //   filteredElements
-    // );
-    this.setState({
-      filteredData: [...filteredElements]
-    });
+    range: 5000
   };
 
   handleTimeChange = e => {
@@ -288,6 +211,87 @@ class Sample extends Component {
 
   handleTimeClick = () => {
     console.log("button clicked");
+  };
+
+  handleSliderBtn = () => {
+    console.log("slider btn clicked");
+  };
+
+  onSliderChange = range => {
+    this.setState(
+      {
+        range
+      },
+      () => {
+        console.log(this.state.range);
+      }
+    );
+  };
+
+  handleChange = (event, name) => {
+    let filteredElements = []; //filtered array
+    let filteredElements2 = []; //filtered array for looping
+    let filteredData = [this.state.flights]; //local state
+    let time = 0;
+    let range = this.state.range;
+    let checkedAirline = [];
+    let checkedFlights = [...this.state.checkedAirLines];
+    time = this.state.time;
+    if (checkedFlights.includes(name)) {
+      console.log("UNCHECKED, if block");
+
+      checkedAirline = checkedFlights.filter(function(airline) {
+        return airline !== name;
+      });
+
+      filteredElements = this.state.filteredData.filter(function(flight) {
+        return flight.name !== name;
+      });
+
+      this.setState({
+        checkedAirLines: [...checkedAirline]
+      });
+
+      if (this.state.checkedAirLines.length === 1) {
+        console.log("length 1 check");
+        filteredElements = [...this.state.flights];
+      }
+    } else {
+      console.log("CHECKED, else block ");
+      if (name !== undefined || checkedFlights.length > 0) {
+        checkedFlights.push(name);
+
+        for (let i = 0; i < checkedFlights.length; i++) {
+          filteredElements2 = this.state.flights.filter(function(flight) {
+            return flight.name === checkedFlights[i];
+          });
+          filteredElements = [...filteredElements, ...filteredElements2];
+        }
+        this.setState({
+          checkedAirLines: [...checkedFlights]
+        });
+      } else {
+        console.log("direct", [...this.state.filteredData]);
+        filteredElements = [...this.state.filteredData];
+      }
+    } // ELSE ENDS
+
+    // if (this.state.time !== "") {
+    filteredElements = filteredElements.filter(function(flight) {
+      return flight.duration >= time;
+    });
+
+    filteredElements = filteredElements.filter(function(flight) {
+      return flight.price <= range;
+    });
+
+    console.log("non zero block, after filtered elements", filteredElements);
+    // }
+    console.log("range ", this.state.range);
+
+    this.setState({
+      filteredData: [...filteredElements]
+    });
   };
 
   render() {
@@ -332,11 +336,19 @@ class Sample extends Component {
           </div>
 
           <div className="sort-option price-wrapper">
-            <p>SORT BY PRICE</p>
-            {/* <form action="">
-                            <input type="text" />
-                            <button>FILTER</button>
-                        </form> */}
+            <p>SORT BY PRICE (default max price 30000)</p>
+            <p>Max Price Limit: {this.state.range}</p>
+
+            <Slider
+              min={5000}
+              max={30000}
+              step={5000}
+              value={this.state.range}
+              onChange={this.onSliderChange}
+              // onChange={this.handleChange}
+            />
+
+            <input type="button" value="FILTER" onClick={this.handleChange} />
           </div>
         </div>
 
