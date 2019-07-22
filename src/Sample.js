@@ -296,32 +296,44 @@ class Sample extends Component {
       filteredElements = [...this.state.flights];
       console.log("filtered elem after spread", filteredElements);
     } else {
+      console.log(checkedFlights);
 
       if (checkedFlights.includes(name)) {
         console.log("UNCHECKED, if block");
 
-        checkedAirline = checkedFlights.filter(function (airline) {
-          return airline !== name;
-        });
+        console.log("checked flights", this.state.checkedAirLines);
+        if (name !== undefined) {
+          checkedAirline = checkedFlights.filter(function (airline) {
+            return airline !== name;
+          });
 
-        filteredElements = this.state.filteredData.filter(function (flight) {
-          return flight.name !== name;
-        });
+          filteredElements = this.state.filteredData.filter(function (flight) {
+            return flight.name !== name;
+          });
 
-        this.setState({
-          checkedAirLines: [...checkedAirline]
-        });
+          this.setState({
+            checkedAirLines: [...checkedAirline]
+          });
 
-        if (this.state.checkedAirLines.length === 1) {
-          console.log("length 1 check");
-          filteredElements = [...this.state.flights];
+          if (this.state.checkedAirLines.length === 1) {
+            console.log("length 1 check");
+            filteredElements = [...this.state.flights];
+          }
         }
+
+        console.log("checked flights", this.state.checkedAirLines);
+
       } else {
         console.log("CHECKED, else block ");
+        console.log("name", name);
+        console.log("checked flights", this.state.checkedAirLines);
 
         if (name !== undefined || checkedFlights.length > 0) {
-          checkedFlights.push(name);
+          console.log("name before push", name);
 
+          if (name !== undefined) {
+            checkedFlights.push(name);
+          }
           for (let i = 0; i < checkedFlights.length; i++) {
             filteredElements2 = this.state.flights.filter(function (flight) {
               return flight.name === checkedFlights[i];
@@ -335,30 +347,28 @@ class Sample extends Component {
           console.log("direct", [...this.state.filteredData]);
           filteredElements = [...this.state.filteredData];
         }
+
       } // ELSE ENDS
 
       console.log("filtered elements before time", filteredElements);
 
-      // if (this.state.time !== "") {
       filteredElements = filteredElements.filter(function (flight) {
         return flight.duration >= time;
       });
-      // }
 
       console.log("filtered elements before range", filteredElements);
-
     }
 
     if (range > 0) {
+      console.log("range greater than 0");
       filteredElements = filteredElements.filter(function (flight) {
         return flight.price <= range;
       });
     }
 
-    console.log("non zero block, after filtered elements after range", filteredElements);
-    // }
     console.log("range ", this.state.range);
     console.log("lenght of checked airline", this.state.checkedAirLines.length);
+    console.log("filtered element before set state", filteredElements);
 
     this.setState({
       filteredData: [...filteredElements]
@@ -373,7 +383,7 @@ class Sample extends Component {
         <div style={{ marginTop: "50px" }} className="filters">
           <form action="">
             <div className="sort-option checkboxes-wrapper">
-              <p>SORT BY AIRLINE</p>
+              <p>FILTER BY AIRLINE</p>
               {this.state.airLines.map((airline, index) => (
                 <div key={index}>
                   <input
@@ -389,7 +399,7 @@ class Sample extends Component {
           </form>
 
           <div className="sort-option time-wrapper">
-            <p>SORT BY TIME</p>
+            <p>FILTER BY TIME</p>
 
             <input
               type="text"
@@ -406,7 +416,7 @@ class Sample extends Component {
           </div>
 
           <div className="sort-option price-wrapper">
-            <p>SORT BY PRICE (default max price 30000)</p>
+            <p>FILTER BY PRICE (default max price 30000)</p>
             <p>Max Price Limit: {this.state.range}</p>
 
             <Slider
@@ -426,7 +436,7 @@ class Sample extends Component {
           <h2>PRICE</h2>
         </div>
 
-        {this.state.filteredData.length === 0 ?
+        {/* {this.state.filteredData.length === 0 ?
           (
             <div className="flights">
               {this.state.flights.map(flight => (
@@ -438,18 +448,18 @@ class Sample extends Component {
               ))}
             </div>
           ) :
-          (
-            <div className="flights">
-              {this.state.filteredData.map(flight => (
-                <div key={flight.id} className="flight-card">
-                  <p> {flight.name} </p>
-                  <p> {flight.duration} </p>
-                  <p> {flight.price} </p>
-                </div>
-              ))}
+          ( */}
+        <div className="flights">
+          {this.state.filteredData.map(flight => (
+            <div key={flight.id} className="flight-card">
+              <p> {flight.name} </p>
+              <p> {flight.duration} </p>
+              <p> {flight.price} </p>
             </div>
-          )
-        }
+          ))}
+        </div>
+        {/* )
+        } */}
       </div>
     );
   }
