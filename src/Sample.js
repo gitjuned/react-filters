@@ -3,9 +3,10 @@ import "./App.css";
 // import Tooltip from "rc-tooltip";
 // import Slider from "rc-slider";
 
-import Slider, { createSliderWithTooltip } from "rc-slider";
+import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import "rc-tooltip/assets/bootstrap.css";
+
 
 class Sample extends Component {
   state = {
@@ -222,9 +223,9 @@ class Sample extends Component {
       {
         range
       },
-      () => {
-        console.log("Range Value: ", this.state.range);
-      }
+      // () => {
+      //   console.log("Range Value: ", this.state.range);
+      // }
     );
   };
 
@@ -237,79 +238,134 @@ class Sample extends Component {
     let checkedAirline = [];
     let checkedFlights = [...this.state.checkedAirLines];
     time = this.state.time;
-    if (checkedFlights.includes(name)) {
-      console.log("UNCHECKED, if block");
 
-      checkedAirline = checkedFlights.filter(function(airline) {
-        return airline !== name;
-      });
+    // if (checkedFlights.includes(name)) {
+    //   console.log("UNCHECKED, if block");
 
-      filteredElements = this.state.filteredData.filter(function(flight) {
-        return flight.name !== name;
-      });
+    //   checkedAirline = checkedFlights.filter(function (airline) {
+    //     return airline !== name;
+    //   });
 
-      this.setState({
-        checkedAirLines: [...checkedAirline]
-      });
+    //   filteredElements = this.state.filteredData.filter(function (flight) {
+    //     return flight.name !== name;
+    //   });
 
-      if (this.state.checkedAirLines.length === 1) {
-        console.log("length 1 check");
-        filteredElements = [...this.state.flights];
-      }
-    } else {
-      console.log("CHECKED, else block ");
-      if (name !== undefined || checkedFlights.length > 0) {
-        checkedFlights.push(name);
+    //   this.setState({
+    //     checkedAirLines: [...checkedAirline]
+    //   });
 
-        for (let i = 0; i < checkedFlights.length; i++) {
-          filteredElements2 = this.state.flights.filter(function(flight) {
-            return flight.name === checkedFlights[i];
-          });
-          filteredElements = [...filteredElements, ...filteredElements2];
-        }
-        this.setState({
-          checkedAirLines: [...checkedFlights]
-        });
-      } else {
-        console.log("direct", [...this.state.filteredData]);
-        filteredElements = [...this.state.filteredData];
-      }
-    } // ELSE ENDS
+    //   if (this.state.checkedAirLines.length === 1) {
+    //     console.log("length 1 check");
+    //     filteredElements = [...this.state.flights];
+    //   }
+    // } else {
+    //   console.log("CHECKED, else block ");
 
-    console.log("filtered elements before time", filteredElements);
-    // if (this.state.time !== "") {
-    filteredElements = filteredElements.filter(function(flight) {
-      return flight.duration >= time;
-    });
-    // }
+    //   if (name !== undefined || checkedFlights.length > 0) {
+    //     checkedFlights.push(name);
 
-    console.log("filtered elements before range", filteredElements);
+    //     for (let i = 0; i < checkedFlights.length; i++) {
+    //       filteredElements2 = this.state.flights.filter(function (flight) {
+    //         return flight.name === checkedFlights[i];
+    //       });
+    //       filteredElements = [...filteredElements, ...filteredElements2];
+    //     }
+    //     this.setState({
+    //       checkedAirLines: [...checkedFlights]
+    //     });
+    //   } else {
+    //     console.log("direct", [...this.state.filteredData]);
+    //     filteredElements = [...this.state.filteredData];
+    //   }
+    // } // ELSE ENDS
 
-    if (name === undefined && time.length === 0) {
+    // console.log("filtered elements before time", filteredElements);
+
+    // // if (this.state.time !== "") {
+    // filteredElements = filteredElements.filter(function (flight) {
+    //   return flight.duration >= time;
+    // });
+    // // }
+
+    // console.log("filtered elements before range", filteredElements);
+
+    if (!name && time.length === 0 && this.state.checkedAirLines.length === 0) {
       console.log("direct range");
       console.log("filtered elem before spread", filteredElements);
       console.log("flights data", this.state.flights);
       filteredElements = [...this.state.flights];
       console.log("filtered elem after spread", filteredElements);
+    } else {
+
+      if (checkedFlights.includes(name)) {
+        console.log("UNCHECKED, if block");
+
+        checkedAirline = checkedFlights.filter(function (airline) {
+          return airline !== name;
+        });
+
+        filteredElements = this.state.filteredData.filter(function (flight) {
+          return flight.name !== name;
+        });
+
+        this.setState({
+          checkedAirLines: [...checkedAirline]
+        });
+
+        if (this.state.checkedAirLines.length === 1) {
+          console.log("length 1 check");
+          filteredElements = [...this.state.flights];
+        }
+      } else {
+        console.log("CHECKED, else block ");
+
+        if (name !== undefined || checkedFlights.length > 0) {
+          checkedFlights.push(name);
+
+          for (let i = 0; i < checkedFlights.length; i++) {
+            filteredElements2 = this.state.flights.filter(function (flight) {
+              return flight.name === checkedFlights[i];
+            });
+            filteredElements = [...filteredElements, ...filteredElements2];
+          }
+          this.setState({
+            checkedAirLines: [...checkedFlights]
+          });
+        } else {
+          console.log("direct", [...this.state.filteredData]);
+          filteredElements = [...this.state.filteredData];
+        }
+      } // ELSE ENDS
+
+      console.log("filtered elements before time", filteredElements);
+
+      // if (this.state.time !== "") {
+      filteredElements = filteredElements.filter(function (flight) {
+        return flight.duration >= time;
+      });
+      // }
+
+      console.log("filtered elements before range", filteredElements);
+
     }
 
     if (range > 0) {
-      filteredElements = filteredElements.filter(function(flight) {
+      filteredElements = filteredElements.filter(function (flight) {
         return flight.price <= range;
       });
     }
 
-    console.log(
-      "non zero block, after filtered elements after range",
-      filteredElements
-    );
+    console.log("non zero block, after filtered elements after range", filteredElements);
     // }
     console.log("range ", this.state.range);
+    console.log("lenght of checked airline", this.state.checkedAirLines.length);
 
     this.setState({
       filteredData: [...filteredElements]
     });
   };
+
+
 
   render() {
     return (
@@ -324,10 +380,7 @@ class Sample extends Component {
                     type="checkbox"
                     id={airline}
                     onChange={event => this.handleChange(event, airline)}
-                    defaultChecked={this.state.checkedAirLines.includes(
-                      airline
-                    )}
-                    // checked={true}
+                    defaultChecked={this.state.checkedAirLines.includes(airline)}
                   />
                   <label htmlFor={airline}>{airline}</label>
                 </div>
@@ -361,10 +414,8 @@ class Sample extends Component {
               max={35000}
               // step={5000}
               value={this.state.range}
-              onChange={this.onSliderChange}
-              // onChange={this.handleChange}
+              onChange={this.onSliderChange} w
             />
-
             <input type="button" value="FILTER" onClick={this.handleChange} />
           </div>
         </div>
@@ -375,27 +426,30 @@ class Sample extends Component {
           <h2>PRICE</h2>
         </div>
 
-        {this.state.filteredData.length === 0 ? (
-          <div className="flights">
-            {this.state.flights.map(flight => (
-              <div key={flight.id} className="flight-card">
-                <p> {flight.name} </p>
-                <p> {flight.duration} </p>
-                <p> {flight.price} </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flights">
-            {this.state.filteredData.map(flight => (
-              <div key={flight.id} className="flight-card">
-                <p> {flight.name} </p>
-                <p> {flight.duration} </p>
-                <p> {flight.price} </p>
-              </div>
-            ))}
-          </div>
-        )}
+        {this.state.filteredData.length === 0 ?
+          (
+            <div className="flights">
+              {this.state.flights.map(flight => (
+                <div key={flight.id} className="flight-card">
+                  <p> {flight.name} </p>
+                  <p> {flight.duration} </p>
+                  <p> {flight.price} </p>
+                </div>
+              ))}
+            </div>
+          ) :
+          (
+            <div className="flights">
+              {this.state.filteredData.map(flight => (
+                <div key={flight.id} className="flight-card">
+                  <p> {flight.name} </p>
+                  <p> {flight.duration} </p>
+                  <p> {flight.price} </p>
+                </div>
+              ))}
+            </div>
+          )
+        }
       </div>
     );
   }
