@@ -437,19 +437,6 @@ class Sample extends Component {
           <h2>PRICE</h2>
         </div>
 
-        {/* {this.state.filteredData.length === 0 ?
-          (
-            <div className="flights">
-              {this.state.flights.map(flight => (
-                <div key={flight.id} className="flight-card">
-                  <p> {flight.name} </p>
-                  <p> {flight.duration} </p>
-                  <p> {flight.price} </p>
-                </div>
-              ))}
-            </div>
-          ) :
-          ( */}
         <div className="flights">
           {this.state.filteredData.map(flight => (
             <div key={flight.id} className="flight-card">
@@ -459,8 +446,7 @@ class Sample extends Component {
             </div>
           ))}
         </div>
-        {/* )
-        } */}
+
       </div>
     );
   }
